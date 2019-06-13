@@ -35,6 +35,13 @@ const Profile: FC<RouteComponentProps> = () => {
     setUser({ ...user, lastName: e.currentTarget.value });
   };
 
+  // Disable the submit button if the user is in the process of being updated or
+  // the first and last name have not been modified.
+  const disableSubmit =
+    formState.isUpdating ||
+    (user.firstName === context.user.firstName &&
+      user.lastName === context.user.lastName);
+
   return (
     <div>
       <h2>Edit Profile</h2>
@@ -61,11 +68,7 @@ const Profile: FC<RouteComponentProps> = () => {
             onChange={onLastNameChange}
           />
         </div>
-        <button
-          className="button"
-          type="submit"
-          disabled={formState.isUpdating}
-        >
+        <button className="button" type="submit" disabled={disableSubmit}>
           Update
         </button>
         {formState.didUpdate && <span>Profile has been updated</span>}

@@ -3,7 +3,8 @@ import { useContext } from "../context";
 import { Link } from "@reach/router";
 
 const Header: FC = () => {
-  // Use the useContext hook to get access to the state in the top-level AppContext
+  // Use the useContext hook to get access to the state in the top-level AppContext.
+  // This can be done at any level of nesting in the component tree.
   const context = useContext();
 
   return (
@@ -11,11 +12,10 @@ const Header: FC = () => {
       <Link className="title" to="/">
         Site Title
       </Link>
-      {context.user && (
-        <Link to="/profile" className="user">
-          {context.user.firstName} {context.user.lastName}
-        </Link>
-      )}
+
+      <Link to="/profile" className="user">
+        {context.user.firstName} {context.user.lastName}
+      </Link>
     </header>
   );
 };

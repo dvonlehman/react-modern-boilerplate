@@ -1,6 +1,10 @@
 import React, { FC } from "react";
 import { User, AppContext } from "./types";
 
+// Use React Context rather than a more complicated state management library like Redux
+// for handling global app state. Inspiration taken from:
+// https://kentcdodds.com/blog/application-state-management-with-react
+
 // In order to make TS happy, we need to pass in a defaultValue.
 const Context = React.createContext<AppContext>({
   user: { firstName: "", lastName: "" },

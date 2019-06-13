@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
 import FullScreenLoader from "./components/FullScreenLoader";
 import { User } from "./types";
+import { fetchUser } from "./api";
 
 let _user: User;
 
@@ -13,8 +14,7 @@ let _user: User;
 // initial app data. Just one continuous loading indicator until the app has everything
 // it needs to render the initial view.
 let AppContextProvider = lazy(async () => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  _user = { firstName: "Sally", lastName: "Smith" };
+  _user = await fetchUser();
   return import("./context");
 });
 

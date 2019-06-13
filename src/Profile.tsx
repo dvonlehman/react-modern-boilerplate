@@ -1,46 +1,53 @@
 import React, { FC, useState, FormEvent, ChangeEvent } from "react";
 import { useContext } from "./context";
 import { RouteComponentProps } from "@reach/router";
+import { updateUser } from "./api";
 
 const Profile: FC<RouteComponentProps> = () => {
   // Use the useContext hook to get access to the state in the top-level AppContext
   const context = useContext();
 
-  const [user, setUser] = useState(context.user);
-  const [formState, setFormState] = useState({
+  const [state, setState] = useState({
+    user: context.user,
     isUpdating: false,
     didUpdate: false
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormState({ isUpdating: true, didUpdate: false });
+    setState({ ...state, isUpdating: true, didUpdate: false });
 
-    // Simulate making an API call to update the user profile.
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const updatedUser = await updateUser(state.user);
 
     // Update the user in the global AppContext. This will cause the change to be reflected
     // everywhere the context user is displayed such as in the Header.
-    context.updateUser(user);
-    setFormState({ isUpdating: false, didUpdate: true });
+    context.updateUser(updatedUser);
+
+    setState({ ...state, isUpdating: false, didUpdate: true });
   };
 
   const onFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormState({ ...formState, didUpdate: false });
-    setUser({ ...user, firstName: e.currentTarget.value });
+    setState({
+      ...state,
+      didUpdate: false,
+      user: { ...state.user, firstName: e.currentTarget.value }
+    });
   };
 
   const onLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormState({ ...formState, didUpdate: false });
-    setUser({ ...user, lastName: e.currentTarget.value });
+    setState({
+      ...state,
+      didUpdate: false,
+      user: { ...state.user, lastName: e.currentTarget.value }
+    });
   };
 
   // Disable the submit button if the user is in the process of being updated or
   // the first and last name have not been modified.
   const disableSubmit =
-    formState.isUpdating ||
-    (user.firstName === context.user.firstName &&
-      user.lastName === context.user.lastName);
+    state.isUpdating ||
+    (state.user.firstName === context.user.firstName &&
+      state.user.lastName === context.user.lastName);
 
   return (
     <div>
@@ -52,8 +59,8 @@ const Profile: FC<RouteComponentProps> = () => {
             className="input"
             type="text"
             required={true}
-            disabled={formState.isUpdating}
-            defaultValue={user.firstName}
+            disabled={state.isUpdating}
+            defaultValue={context.user.firstName}
             onChange={onFirstNameChange}
           />
         </div>
@@ -63,15 +70,15 @@ const Profile: FC<RouteComponentProps> = () => {
             className="input"
             type="text"
             required={true}
-            disabled={formState.isUpdating}
-            defaultValue={user.lastName}
+            disabled={state.isUpdating}
+            defaultValue={context.user.lastName}
             onChange={onLastNameChange}
           />
         </div>
         <button className="button" type="submit" disabled={disableSubmit}>
           Update
         </button>
-        {formState.didUpdate && <span>Profile has been updated</span>}
+        {state.didUpdate && <span>Profile has been updated</span>}
       </form>
     </div>
   );

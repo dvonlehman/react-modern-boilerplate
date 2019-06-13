@@ -1,41 +1,31 @@
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom";
-import { Router } from "@reach/router";
-import Header from "./components/Header";
-import { AppContextProvider } from "./context";
-import "./index.css";
+import FullScreenLoader from "./components/FullScreenLoader";
 import { User } from "./types";
 
-let _user: User | undefined = undefined;
+let _user: User | undefined;
 
-// Lazy load the page specific bundle as needed
-let Home = lazy(async () => {
+// Simulate a delay while fetching the user. The Suspense loading fallback
+// will be display both while loading the bundle and fetching the user, or any
+// other mandatory data required before displaying any portion of the app.
+// We don't have to worry about a loading indicator glitch where one loader appears
+// while downloading the bundle, then another loader appears while fetching the
+// initial app data.
+let AppContextProvider = lazy(async () => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   _user = { firstName: "Kawhi", lastName: "Leonard" };
-  return import("./Home");
+  return import("./context");
 });
 
-let Nested = lazy(() => import("./Nested"));
+// Lazy import the App.
+let App = lazy(() => import("./App"));
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
-  <AppContextProvider user={_user}>
-    <div>
-      <Header />
-      <section className="main">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Router>
-            <Home path="/" />
-            <Nested path="/nested" />
-          </Router>
-        </Suspense>
-      </section>
-    </div>
-  </AppContextProvider>,
+  <Suspense fallback={<FullScreenLoader />}>
+    <AppContextProvider getUser={() => _user}>
+      <App />
+    </AppContextProvider>
+  </Suspense>,
   rootElement
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();

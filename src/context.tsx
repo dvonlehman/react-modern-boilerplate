@@ -1,31 +1,22 @@
 import React, { FC } from "react";
 import { User, AppContext } from "./types";
 
-// function useContext() {
-//   const context = React.useContext<AppContext>(Context);
-
-//   const [state, setState] = context;
-//   // if (!context) {
-//   //   throw new Error("useAppContext must be used within a AppContext");
-//   // }
-
-//   return {
-//     user,
-//     setUser
-//   };
-// }
-
 const Context = React.createContext<AppContext>({});
 
-const AppContextProvider: FC<{ user: User | undefined }> = props => {
-  const [state, setState] = React.useState({ user: props.user });
+export function useContext(): AppContext {
+  return React.useContext<AppContext>(Context);
+}
+
+interface AppContextProviderProps {
+  // When using a simple user prop, the value was always undefined. Must be something
+  // related to the lazy importing. Using a function does the trick.
+  getUser: () => User | undefined,
+}
+
+const AppContextProvider: FC<AppContextProviderProps> = props => {
+  const [state, setState] = React.useState({ user: props.getUser() });
 
   const updateUser = (user: User) => setState({ ...state, user });
-
-  // const Context = React.createContext<AppContext>({
-  //   user: props.user,
-  //   updateUser
-  // });
 
   return (
     <Context.Provider
@@ -39,4 +30,5 @@ const AppContextProvider: FC<{ user: User | undefined }> = props => {
   );
 };
 
-export { Context, AppContextProvider };
+// Because we are lazy importing, the AppContextProvider must be the default export.
+export default AppContextProvider;

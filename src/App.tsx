@@ -5,8 +5,9 @@ import Header from "./components/Header";
 import "./App.css";
 
 // Lazy load the page specific bundles as needed
-let Home = lazy(async () => import("./Home"));
+let Home = lazy(() => import("./Home"));
 let Nested = lazy(() => import("./Nested"));
+let Profile = lazy(() => import("./Profile"));
 
 export default function() {
   return (
@@ -16,6 +17,7 @@ export default function() {
         <Router>
           <Home path="/" />
           <Nested path="/nested" />
+          <Profile path="/profile" />
         </Router>
       </section>
     </div>

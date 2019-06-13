@@ -1,8 +1,13 @@
 import React, { FC } from "react";
 import { User, AppContext } from "./types";
 
-const Context = React.createContext<AppContext>({});
+// In order to make TS happy, we need to pass in a defaultValue.
+const Context = React.createContext<AppContext>({
+  user: { firstName: "", lastName: "" },
+  updateUser: (user: User) => {}
+});
 
+// Custom hook that components can use to access the AppContext
 export function useContext(): AppContext {
   return React.useContext<AppContext>(Context);
 }
@@ -10,7 +15,7 @@ export function useContext(): AppContext {
 interface AppContextProviderProps {
   // When using a simple user prop, the value was always undefined. Must be something
   // related to the lazy importing. Using a function does the trick.
-  getUser: () => User | undefined,
+  getUser: () => User;
 }
 
 const AppContextProvider: FC<AppContextProviderProps> = props => {

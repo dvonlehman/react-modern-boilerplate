@@ -12,9 +12,9 @@ const Header: FC = () => {
         Site Title
       </Link>
       {context.user && (
-        <span className="user">
+        <Link to="/profile" className="user">
           {context.user.firstName} {context.user.lastName}
-        </span>
+        </Link>
       )}
     </header>
   );

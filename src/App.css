@@ -1,3 +1,52 @@
+.input,
+.textarea {
+  max-width: 100%;
+  width: 100%;
+}
+
+.input,
+.select select,
+.textarea {
+  background-color: #fff;
+  border-radius: 4px;
+  color: #363636;
+  border: 2px solid #dbdbdb;
+  font-size: 1rem;
+  height: 2.25em;
+  padding: 0 4px;
+}
+
+.input:disabled {
+  color: #dbdbdb;
+}
+
+.field:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+.button {
+  background-color: #fff;
+  border-color: #dbdbdb;
+  border-width: 1px;
+  color: #363636;
+  cursor: pointer;
+  justify-content: center;
+  padding-bottom: calc(0.375em - 1px);
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  padding-top: calc(0.375em - 1px);
+  text-align: center;
+  white-space: nowrap;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.25em;
+  margin-right: 1em;
+}
+
+.button:disabled {
+  color: #dbdbdb;
+}
+
 header {
   background-color: rgb(179, 176, 176);
   display: flex;
@@ -13,8 +62,10 @@ header a.title {
   color: #000;
 }
 
-header span.user {
+header a.user {
   font-weight: 600;
+  text-decoration: none;
+  color: #000;
 }
 
 section.main {

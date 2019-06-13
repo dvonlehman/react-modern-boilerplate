@@ -4,6 +4,6 @@ export interface User {
 }
 
 export interface AppContext {
-  user?: User;
-  updateUser?: (user: User) => void;
+  user: User;
+  updateUser: (user: User) => void;
 }
